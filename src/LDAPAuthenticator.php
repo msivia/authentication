@@ -6,8 +6,6 @@ use Depotwarehouse\Toolbox\Verification;
 use Dreamscapes\Ldap\Core\LinkResource;
 use Dreamscapes\Ldap\LdapException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use UAlberta\Authentication\Exceptions\LDAPConnectionException;
-use UAlberta\Authentication\Exceptions\LDAPSearchException;
 use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
 
 /**
@@ -41,22 +39,10 @@ class LDAPAuthenticator implements AuthenticatorInterface {
      */
     protected $configuration;
 
-    public function __construct(UserRepositoryInterface $userRepository, Configuration $configuration) {
+    public function __construct(UserRepositoryInterface $userRepository, Configuration $configuration, LinkResource $ldap_link) {
         $this->userRepository = $userRepository;
         $this->configuration = $configuration;
-        $this->connection = $this->initalizeLDAP();
-    }
-
-    /**
-     * Initializes an LDAP Link
-     * @return LinkResource
-     */
-    protected function initalizeLDAP() {
-        $host = $this->configuration->ldap["host"];
-        $port = $this->configuration->ldap["port"];
-        $link = new LinkResource("{$host}:{$port}");
-
-        return $link;
+        $this->connection = $ldap_link;
     }
 
     /**
