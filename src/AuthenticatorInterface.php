@@ -1,6 +1,6 @@
 <?php
 
-namespace UAlberta\Authentication;
+namespace UAlberta\IST\Authentication;
 
 interface AuthenticatorInterface {
 
