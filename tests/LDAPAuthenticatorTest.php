@@ -22,6 +22,8 @@ class LDAPAuthenticatorTest extends PHPUnit_Framework_TestCase {
         $this->assertAttributeEquals($this->configuration, "configuration", $authenticator);
         $this->assertAttributeEquals($this->mock_ldap, "connection", $authenticator);
     }
+
+
 }
 
 class UserRepository extends \Depotwarehouse\Toolbox\DataManagement\Repositories\BaseRepositoryAbstract implements \UAlberta\IST\Authentication\UserRepositoryInterface {
