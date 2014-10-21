@@ -1,0 +1,29 @@
+{
+    "name": "u-alberta/authentication",
+    "description": "",
+    "authors": [
+        {
+            "name": "Troy Pavlek",
+            "email": "tpavlek@ualberta.ca"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*",
+        "illuminate/pagination": "dev-reduce-deps",
+        "depotwarehouse/toolbox": "~1.0",
+        "enygma/yubikey": "1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "UAlberta\\Authentication": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/tpavlek/pagination"
+        }
+    ],
+    "minimum-stability": "stable"
+}
