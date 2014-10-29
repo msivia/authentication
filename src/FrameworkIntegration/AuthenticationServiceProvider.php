@@ -2,6 +2,7 @@
 
 namespace UAlberta\IST\Authentication\FrameworkIntegration;
 
+use Dreamscapes\Ldap\Core\LinkResource;
 use Illuminate\Support\ServiceProvider;
 use UAlberta\IST\Authentication\Configuration;
 
@@ -42,6 +43,11 @@ class AuthenticationServiceProvider extends ServiceProvider {
             '\UAlberta\IST\Authentication\Providers\UserProviderInterface',
             '\UAlberta\IST\Authentication\Providers\LDAPUserProvider'
         );
+
+        $this->app->bind('\Dreamscapes\Ldap\Core\LinkResource', function() {
+            $resource = new LinkResource(\Config::get('authentication::ldap.host') . ":" . \Config::get('authentication::ldap.port'));
+            return $resource;
+        });
     }
 
 	/**
