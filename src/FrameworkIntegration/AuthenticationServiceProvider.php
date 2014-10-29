@@ -1,6 +1,9 @@
-<?php namespace UAlberta\IST\Authentication\FrameworkIntegration;
+<?php
+
+namespace UAlberta\IST\Authentication\FrameworkIntegration;
 
 use Illuminate\Support\ServiceProvider;
+use UAlberta\IST\Authentication\Configuration;
 
 class AuthenticationServiceProvider extends ServiceProvider {
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace UAlberta\IST\Authentication;
+namespace UAlberta\IST\Authentication\Authenticators;
 
 use Depotwarehouse\Toolbox\Verification;
-use Dreamscapes\Ldap\Core\LinkResource;
-use Dreamscapes\Ldap\LdapException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
+use UAlberta\IST\Authentication\Configuration;
+use UAlberta\IST\Authentication\Providers\UserProviderInterface;
+use UAlberta\IST\Authentication\UserRepositoryInterface;
 
 /**
  * Class LDAPAuthenticator
@@ -21,11 +21,7 @@ use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
  */
 class LDAPAuthenticator implements AuthenticatorInterface {
 
-    /**
-     * The current LDAP connection object
-     * @var LinkResource
-     */
-    protected $connection;
+
 
     /**
      * A repository of users to serialize any data pulled from LDAP.
@@ -34,15 +30,21 @@ class LDAPAuthenticator implements AuthenticatorInterface {
     protected $userRepository;
 
     /**
+     * A provider of user information from a concrete source (LDAP in this case)
+     * @var UserProviderInterface
+     */
+    protected $userProvider;
+
+    /**
      * Configuration of the package.
      * @var Configuration
      */
     protected $configuration;
 
-    public function __construct(UserRepositoryInterface $userRepository, Configuration $configuration, LinkResource $ldap_link) {
+    public function __construct(UserRepositoryInterface $userRepository, UserProviderInterface $userProvider, Configuration $configuration) {
         $this->userRepository = $userRepository;
+        $this->userProvider = $userProvider;
         $this->configuration = $configuration;
-        $this->connection = $ldap_link;
     }
 
     /**
@@ -61,36 +63,10 @@ class LDAPAuthenticator implements AuthenticatorInterface {
             return $this->userRepository->findByCCID($identifier);
         } catch (ModelNotFoundException $exception) {
             // We don't have a local copy of the user, pull it from LDAP
-            $attributes = $this->retrieveFromLdap($identifier);
+            $attributes = $this->userProvider->retrieveUser($identifier);
             return $this->userRepository->create($attributes);
         }
     }
-
-    /**
-     * @param $identifier
-     * @throws ObjectNotFoundException
-     * @return array
-     */
-    protected function retrieveFromLdap($identifier) {
-        // We must bind to our service account
-        $service_user = $this->configuration->ldap['service_username'];
-        $service_password = $this->configuration->ldap['service_password'];
-        $this->connection->bind("uid={$service_user},ou=people,dc=ualberta,dc=ca", $service_password);
-
-        $results = $this->connection->search("ou=People,dc=ualberta,dc=ca", "(uid={$identifier})", [ "uid", "employeenumber" ], LinkResource::SCOPE_ONELEVEL);
-
-        if ($results->countEntries() == 0) {
-            throw new ObjectNotFoundException("Could not find user: {$identifier} in the LDAP system");
-        }
-
-        $entries = $results->getEntries();
-
-        return [
-            'ccid' => $entries[0]["uid"][0],
-            'id' => $entries[0]["employeenumber"][0]
-        ];
-    }
-
 
     /**
      * Validates a user based on the given credentials.
@@ -105,14 +81,8 @@ class LDAPAuthenticator implements AuthenticatorInterface {
 
         $user = $this->retrieveById($credentials["ccid"]);
 
-        try {
-            return $this->connection->bind("uid={$credentials['ccid']},ou=People,dc=ualberta,dc=ca", $credentials['password']);
-        } catch (LdapException $exception) {
-            return false;
-        }
-        catch (\ErrorException $exception) {
-            return false;
-        }
+        return $this->userProvider->validateUser($credentials['ccid'], $credentials['password']);
+
     }
 
 } 
