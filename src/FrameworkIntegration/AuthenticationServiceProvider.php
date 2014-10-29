@@ -37,6 +37,11 @@ class AuthenticationServiceProvider extends ServiceProvider {
 
             return $configuration;
         });
+
+        $this->app->bind(
+            '\UAlberta\IST\Authentication\Providers\UserProviderInterface',
+            '\UAlberta\IST\Authentication\Providers\LDAPUserProvider'
+        );
     }
 
 	/**
