@@ -1,6 +1,6 @@
 <?php
 
-namespace UAlberta\IST\Authentication\Laravel\FrameworkIntegration;
+namespace UAlberta\IST\Authentication\FrameworkIntegration\Laravel;
 
 use Dreamscapes\Ldap\Core\LinkResource;
 use Illuminate\Support\ServiceProvider;
