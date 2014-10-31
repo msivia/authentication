@@ -1,6 +1,6 @@
 <?php
 
-namespace UAlberta\IST\Authentication\FrameworkIntegration;
+namespace UAlberta\IST\Authentication\Laravel\FrameworkIntegration;
 
 use Dreamscapes\Ldap\Core\LinkResource;
 use Illuminate\Support\ServiceProvider;
@@ -27,7 +27,7 @@ class AuthenticationServiceProvider extends ServiceProvider {
 
     public function boot() {
         // Packages
-        $this->package('u-alberta/authentication', null, __DIR__ . "/../");
+        $this->package('u-alberta/authentication', null, __DIR__);
         $ldap_config = \Config::get('authentication::ldap');
         $this->app->bind('\UAlberta\IST\Authentication\Configuration', function() use ($ldap_config) {
             $configuration = new Configuration();
