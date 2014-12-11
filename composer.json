@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "illuminate/pagination": "dev-reduce-deps",
         "depotwarehouse/toolbox": "~1.0",
         "dreamscapes/ldap-core": "~1.0"
