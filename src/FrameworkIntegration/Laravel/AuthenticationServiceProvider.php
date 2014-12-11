@@ -31,7 +31,7 @@ class AuthenticationServiceProvider extends ServiceProvider {
 
     public function boot() {
         // Packages
-        $this->package('u-alberta/authentication', null, __DIR__);
+        $this->package('u-alberta/authentication', null, realpath(__DIR__."/../../"));
         $ldap_config = \Config::get('authentication::ldap');
         $this->app->bind(Configuration::class, function() use ($ldap_config) {
             $configuration = new Configuration();
