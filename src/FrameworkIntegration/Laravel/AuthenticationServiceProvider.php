@@ -19,7 +19,7 @@ class AuthenticationServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = true;
+    protected $defer = false;
 
     /**
      * Register the service provider.
@@ -54,7 +54,7 @@ class AuthenticationServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/config.php' => config_path('config.php')
+            __DIR__.'/config/config.php' => config_path('authentication.php')
         ]);
     }
 
