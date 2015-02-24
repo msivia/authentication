@@ -28,7 +28,7 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $ldap_config = Config::get('authentication::ldap');
+        $ldap_config = Config::get('authentication.ldap');
 
         $this->app->bind(Configuration::class, function () use ($ldap_config) {
             $configuration = new Configuration();
