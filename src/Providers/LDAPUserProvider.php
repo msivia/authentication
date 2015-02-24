@@ -4,9 +4,10 @@ namespace UAlberta\IST\Authentication\Providers;
 
 use Dreamscapes\Ldap\Core\LinkResource;
 use UAlberta\IST\Authentication\Configuration;
+use UAlberta\IST\Authentication\Contracts\UserProvider;
 use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
 
-class LDAPUserProvider implements UserProviderInterface {
+class LDAPUserProvider implements UserProvider {
 
     /**
      * The current LDAP connection object

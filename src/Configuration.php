@@ -10,7 +10,8 @@ namespace UAlberta\IST\Authentication;
  *
  * @package UAlberta\IST\Authentication
  */
-class Configuration {
+class Configuration
+{
 
     /**
      * Configuration related to LDAP.
@@ -24,11 +25,13 @@ class Configuration {
      */
     public $ldap;
 
-    public function __construct() {
-        $this->ldap = [];
+    public function __construct()
+    {
+        $this->ldap = [ ];
     }
 
-    public function setLDAP($host, $port, $service_username, $service_password) {
+    public function setLDAP($host, $port, $service_username, $service_password)
+    {
         $this->ldap["host"] = $host;
         $this->ldap["port"] = $port;
         $this->ldap["service_username"] = $service_username;

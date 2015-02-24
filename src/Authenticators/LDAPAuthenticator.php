@@ -3,10 +3,12 @@
 namespace UAlberta\IST\Authentication\Authenticators;
 
 use Depotwarehouse\Toolbox\Verification;
+use Depotwarehouse\Toolbox\Verification\ParameterRequiredException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use UAlberta\IST\Authentication\Configuration;
-use UAlberta\IST\Authentication\Providers\UserProviderInterface;
-use UAlberta\IST\Authentication\UserRepositoryInterface;
+use UAlberta\IST\Authentication\Contracts\Authenticator;
+use UAlberta\IST\Authentication\Contracts\UserProvider;
+use UAlberta\IST\Authentication\Contracts\UserRepository;
 
 /**
  * Class LDAPAuthenticator
@@ -19,19 +21,21 @@ use UAlberta\IST\Authentication\UserRepositoryInterface;
  *
  * @package UAlberta\Authentication
  */
-class LDAPAuthenticator implements AuthenticatorInterface {
-
+class LDAPAuthenticator implements Authenticator
+{
 
 
     /**
      * A repository of users to serialize any data pulled from LDAP.
-     * @var \UAlberta\IST\Authentication\UserRepositoryInterface
+     *
+     * @var \UAlberta\IST\Authentication\Contracts\UserRepository
      */
     protected $userRepository;
 
     /**
      * A provider of user information from a concrete source (LDAP in this case)
-     * @var UserProviderInterface
+     *
+     * @var \UAlberta\IST\Authentication\Contracts\UserProvider
      */
     protected $userProvider;
 
@@ -41,7 +45,11 @@ class LDAPAuthenticator implements AuthenticatorInterface {
      */
     protected $configuration;
 
-    public function __construct(UserRepositoryInterface $userRepository, UserProviderInterface $userProvider, Configuration $configuration) {
+    public function __construct(
+        UserRepository $userRepository,
+        UserProvider $userProvider,
+        Configuration $configuration
+    ) {
         $this->userRepository = $userRepository;
         $this->userProvider = $userProvider;
         $this->configuration = $configuration;
@@ -54,7 +62,7 @@ class LDAPAuthenticator implements AuthenticatorInterface {
      * we will search LDAP, add it to the database, then return it.
      *
      * @param string $identifier The CCID of the user we're trying to retrieve
-     * @return \Illuminate\Database\Eloquent\Model|static
+     * @return \Illuminate\Database\Eloquent\Model
      */
     protected function retrieveById($identifier)
     {
@@ -73,11 +81,12 @@ class LDAPAuthenticator implements AuthenticatorInterface {
      *
      * @param array $credentials
      * @return bool
-     * @throws \Depotwarehouse\Toolbox\Exceptions\ParameterRequiredException
+     * @throws ParameterRequiredException
      */
-    public function validateCredentials(array $credentials) {
+    public function validateCredentials(array $credentials)
+    {
         $requirements = [ "ccid", "password" ];
-        Verification::require_set($credentials, $requirements);
+        Verification\require_set($credentials, $requirements);
 
         $user = $this->retrieveById($credentials["ccid"]);
 

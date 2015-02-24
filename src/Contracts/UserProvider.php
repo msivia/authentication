@@ -1,8 +1,8 @@
 <?php
 
-namespace UAlberta\IST\Authentication\Providers;
+namespace UAlberta\IST\Authentication\Contracts;
 
-interface UserProviderInterface {
+interface UserProvider {
 
     /**
      * Retrieves a user from a concrete source.
