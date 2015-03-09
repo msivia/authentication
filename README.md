@@ -17,19 +17,19 @@ composer require u-alberta/authentication
 Laravel Integration
 -------------------
 
-Add the following line to your `app/config/app.php` service providers array:
+Add the following line to your `config/app.php` service providers array:
 
-```
-'\UAlberta\IST\Authentication\FrameworkIntegration\Laravel\AuthenticationServiceProvider'
+```php
+\UAlberta\IST\Authentication\FrameworkIntegration\Laravel\AuthenticationServiceProvider::class
 ```
 
 You will also need to publish the configuration
 
 ```
-php artisan config:publish u-alberta/authentication
+php artisan vendor:publish
 ```
 
-The defaults for that file should be sensible, but you will also need to populate environment variables with the following:
-
-// TODO table of environment variables.
+The defaults for that file should be sensible. The `AUTHENTICATION_SERVICE_USERNAME` and `AUTHENTICATION_SERVICE_PASSWORD`
+environment variables need to be set in your `.env` file for the package to work properly. You can also edit the values
+directly in your published configuration, but this is not recommended as it may expose passwords.
 
