@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.5.0",
         "dreamscapes/ldap-core": "~1.0",
-        "depotwarehouse/toolbox": "~2.0"
+        "depotwarehouse/toolbox": "~2.1"
     },
     "autoload": {
         "psr-4": {
