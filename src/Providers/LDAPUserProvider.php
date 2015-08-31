@@ -45,7 +45,7 @@ class LDAPUserProvider implements UserProvider {
         $results = $this->connection->search("ou=People,dc=ualberta,dc=ca", "(uid={$identifier})", [ "uid", "employeenumber" ], LinkResource::SCOPE_ONELEVEL);
 
         if ($results->countEntries() == 0) {
-            throw new ObjectNotFoundException("Could not find user: {$identifier} in the LDAP system");
+            throw new ObjectNotFoundException($identifier);
         }
 
         $entries = $results->getEntries();

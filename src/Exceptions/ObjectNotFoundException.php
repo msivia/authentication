@@ -1,5 +1,5 @@
 <?php
-namespace UAlberta\IST\Authentication;
+namespace UAlberta\IST\Authentication\Exceptions;
 
 use Exception;
 
