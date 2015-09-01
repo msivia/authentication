@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: msivia
- * Date: 8/31/15
- * Time: 3:49 PM
- */
 
 namespace UAlberta\IST\Authentication\Exceptions;
 
