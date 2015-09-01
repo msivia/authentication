@@ -5,9 +5,15 @@ namespace UAlberta\IST\Authentication\Providers;
 use Dreamscapes\Ldap\Core\LinkResource;
 use UAlberta\IST\Authentication\Configuration;
 use UAlberta\IST\Authentication\Contracts\UserProvider;
+use UAlberta\IST\Authentication\Exceptions\CredentialsNotFoundException;
 use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
 
 class LDAPUserProvider implements UserProvider {
+
+    // Missing credentials case constants
+    const USER_NOT_FOUND = 1;
+    const PASSWORD_NOT_FOUND = 2;
+    const USER_PASSWORD_NOT_FOUND = 3;
 
     /**
      * The current LDAP connection object
@@ -21,7 +27,8 @@ class LDAPUserProvider implements UserProvider {
      */
     protected $configuration;
 
-    public function __construct(LinkResource $linkResource, Configuration $configuration) {
+    public function __construct(LinkResource $linkResource, Configuration $configuration)
+    {
         $this->connection = $linkResource;
         $this->configuration = $configuration;
     }
@@ -32,17 +39,28 @@ class LDAPUserProvider implements UserProvider {
      * The return of the user takes the form of an associative array of the attributes of that user.
      *
      * @param $identifier
+     * @return \string[]
+     * @throws CredentialsNotFoundException
      * @throws ObjectNotFoundException
-     * @return string[]
      */
     public function retrieveUser($identifier)
     {
         // We must bind to our service account
         $service_user = $this->configuration->ldap['service_username'];
         $service_password = $this->configuration->ldap['service_password'];
+
+        // check if service credentials exist
+        if (empty($service_user) && !empty($service_password)) {
+            throw new CredentialsNotFoundException($identifier,$this::USER_NOT_FOUND);
+        } elseif (empty($service_password) && !empty($service_user) ) {
+            throw new CredentialsNotFoundException($identifier,$this::PASSWORD_NOT_FOUND);
+        } elseif (empty($service_user) && empty($service_password)) {
+            throw new CredentialsNotFoundException($identifier,$this::USER_PASSWORD_NOT_FOUND);
+        }
+
         $this->connection->bind("uid={$service_user},ou=people,dc=ualberta,dc=ca", $service_password);
 
-        $results = $this->connection->search("ou=People,dc=ualberta,dc=ca", "(uid={$identifier})", [ "uid", "employeenumber" ], LinkResource::SCOPE_ONELEVEL);
+        $results = $this->connection->search("ou=People,dc=ualberta,dc=ca", "(uid={$identifier})", ["uid", "employeenumber"], LinkResource::SCOPE_ONELEVEL);
 
         if ($results->countEntries() == 0) {
             throw new ObjectNotFoundException($identifier);
