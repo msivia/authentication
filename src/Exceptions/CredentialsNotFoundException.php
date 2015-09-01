@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: msivia
- * Date: 8/31/15
- * Time: 3:49 PM
- */
 
 namespace UAlberta\IST\Authentication\Exceptions;
 
@@ -14,6 +8,11 @@ use Exception;
 class CredentialsNotFoundException extends Exception
 {
     protected $case;
+
+    // Missing credentials case constants
+    const USER_NOT_FOUND = 1;
+    const PASSWORD_NOT_FOUND = 2;
+    const USER_PASSWORD_NOT_FOUND = 3;
 
     /**
      * Creates a new exception.
@@ -28,13 +27,13 @@ class CredentialsNotFoundException extends Exception
         // Pass the message  to the parent
         $message = "User {$identifier} could not be looked in LDAP system:";
         switch ($this->case) {
-            case 1:
+            case $this::USER_NOT_FOUND :
                 $message = "{$message} Missing username for LDAP System";
                 break;
-            case 2:
+            case $this::PASSWORD_NOT_FOUND:
                 $message = "{$message} Missing password for LDAP System";
                 break;
-            case 3:
+            case $this::USER_PASSWORD_NOT_FOUND:
                 $message = "{$message} Missing username & password for LDAP System";
                 break;
             default:
