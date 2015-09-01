@@ -8,12 +8,8 @@ use UAlberta\IST\Authentication\Contracts\UserProvider;
 use UAlberta\IST\Authentication\Exceptions\CredentialsNotFoundException;
 use UAlberta\IST\Authentication\Exceptions\ObjectNotFoundException;
 
-class LDAPUserProvider implements UserProvider {
-
-    // Missing credentials case constants
-    const USER_NOT_FOUND = 1;
-    const PASSWORD_NOT_FOUND = 2;
-    const USER_PASSWORD_NOT_FOUND = 3;
+class LDAPUserProvider implements UserProvider
+{
 
     /**
      * The current LDAP connection object
@@ -51,11 +47,11 @@ class LDAPUserProvider implements UserProvider {
 
         // check if service credentials exist
         if (empty($service_user) && !empty($service_password)) {
-            throw new CredentialsNotFoundException($identifier,$this::USER_NOT_FOUND);
-        } elseif (empty($service_password) && !empty($service_user) ) {
-            throw new CredentialsNotFoundException($identifier,$this::PASSWORD_NOT_FOUND);
+            throw new CredentialsNotFoundException($identifier, CredentialsNotFoundException::USER_NOT_FOUND);
+        } elseif (empty($service_password) && !empty($service_user)) {
+            throw new CredentialsNotFoundException($identifier, CredentialsNotFoundException::PASSWORD_NOT_FOUND);
         } elseif (empty($service_user) && empty($service_password)) {
-            throw new CredentialsNotFoundException($identifier,$this::USER_PASSWORD_NOT_FOUND);
+            throw new CredentialsNotFoundException($identifier, CredentialsNotFoundException::USER_PASSWORD_NOT_FOUND);
         }
 
         $this->connection->bind("uid={$service_user},ou=people,dc=ualberta,dc=ca", $service_password);
