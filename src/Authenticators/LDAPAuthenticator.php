@@ -64,7 +64,7 @@ class LDAPAuthenticator implements Authenticator
      * @param string $identifier The CCID of the user we're trying to retrieve
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function retrieveById($identifier)
+    public function retrieveById($identifier)
     {
         try {
             // We first try and find the associated user record in our local table
